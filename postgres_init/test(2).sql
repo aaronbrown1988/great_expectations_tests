@@ -1,6 +1,6 @@
 -- Adminer 4.8.1 PostgreSQL 14.4 (Debian 14.4-1.pgdg110+1) dump
 
-\connect "postgres";
+
 
 DROP TABLE IF EXISTS "test";
 DROP SEQUENCE IF EXISTS test_id_seq;

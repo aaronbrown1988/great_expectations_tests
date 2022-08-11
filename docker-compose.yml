@@ -29,7 +29,9 @@ services:
       retries: 2
       start_period: 40s
   replicator:
-    image: osalvador/replicadb
+    build: 
+      context: .
+      dockerfile: Dockerfile_replica
     volumes:
       - ./replicadb:/home/replicadb/conf/
     depends_on:
@@ -43,3 +45,26 @@ services:
     restart: always
     ports:
       - 8080:8080
+  
+  ge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes: 
+      - ./ge_runner:/opt/great_expectations/ge_runner
+      - ./great_expectation_stores:/opt/great_expectations/great_expectation_stores
+    depends_on:
+      source:
+        condition: service_healthy
+      destination:
+        condition: service_healthy
+    # restart: always
+  web:
+    image: nginx
+    volumes:
+    - ./great_expectation_stores/docs:/usr/share/nginx/html
+    ports:
+    - "9090:80"
+    environment:
+    # - NGINX_HOST=foobar.com
+    - NGINX_PORT=80

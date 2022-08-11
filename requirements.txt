@@ -1,2 +1,6 @@
 great-expectations
 tqdm
+psycopg2
+pymysql
+sqlalchemy
+ruamel.yaml
