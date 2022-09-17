@@ -28,37 +28,75 @@ services:
       timeout: 10s
       retries: 2
       start_period: 40s
-  replicator:
-    build: 
-      context: .
-      dockerfile: Dockerfile_replica
-    volumes:
-      - ./replicadb:/home/replicadb/conf/
-    depends_on:
-      source:
-        condition: service_healthy
-      destination:
-        condition: service_healthy
-    # restart: always
+
+  # replicator:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile_replica
+  #   volumes:
+  #     - ./replicadb:/home/replicadb/conf/
+  #   depends_on:
+  #     source:
+  #       condition: service_healthy
+  #     destination:
+  #       condition: service_healthy
+  #   # restart: always
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
   
-  ge:
+  # ge:
+  #   platform: linux/amd64
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   volumes: 
+  #     - ./ge_runner:/opt/great_expectations/ge_runner
+  #     - ./great_expectation_stores:/opt/great_expectations/great_expectation_stores
+  #   depends_on:
+  #     source:
+  #       condition: service_healthy
+  #     destination:
+  #       condition: service_healthy
+  #   command: ge_runner/main.py
+  # datacompy:
+  #   platform: linux/amd64
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   volumes: 
+  #     - ./datacompy_runner:/opt/great_expectations/ge_runner
+  #   depends_on:
+  #     source:
+  #       condition: service_healthy
+  #     destination:
+  #       condition: service_healthy
+  #   command: ge_runner/main.py
+  #   # restart: always
+  fault_test:
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
     volumes: 
-      - ./ge_runner:/opt/great_expectations/ge_runner
+      - ./fault_creator:/opt/great_expectations/ge_runner
+      - ./datacompy_runner:/opt/great_expectations/ge_runner/datacompy_runner
+      - ./ge_runner:/opt/great_expectations/ge_runner/ge_runner
       - ./great_expectation_stores:/opt/great_expectations/great_expectation_stores
     depends_on:
       source:
         condition: service_healthy
       destination:
         condition: service_healthy
+        
+    entrypoint: pytest
+    environment:
+      - PYTHONPATH=/opt/great_expectations/ge_runner
     # restart: always
+
+    
   web:
     image: nginx
     volumes:

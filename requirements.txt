@@ -1,6 +1,10 @@
 great-expectations
 tqdm
-psycopg2
+psycopg2-binary==2.9.3
 pymysql
 sqlalchemy
 ruamel.yaml
+datacompy
+loguru
+pytest
+pytest-watch

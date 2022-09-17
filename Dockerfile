@@ -5,4 +5,4 @@ ADD requirements.txt /opt/great_expectations/
 RUN mkdir -p /root/.config/pip
 ADD pip.ini /root/.config/pip/
 RUN pip install -r requirements.txt
-CMD ["python", "ge_runner/main.py"]
+ENTRYPOINT [ "python" ]
